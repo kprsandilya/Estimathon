@@ -9,6 +9,7 @@ export function createInitialGame() {
     submissions: {},
     locked: false,
     revealAnswers: false,
+    timerDurationSec: FORTY_MIN_SEC,
     timerPausedSec: FORTY_MIN_SEC,
     timerEndAt: null,
   }

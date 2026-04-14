@@ -1,3 +1,12 @@
+import { FORTY_MIN_SEC } from '../gameDefaults.js'
+
+/** Configured round length; used when resetting the timer. */
+export function configuredTimerDurationSec(game) {
+  const s = game.timerDurationSec
+  if (typeof s === 'number' && s >= 60) return s
+  return FORTY_MIN_SEC
+}
+
 /** @param {{ timerEndAt: number | null, timerPausedSec: number }} game */
 export function getTimerSecondsRemaining(game) {
   if (game.timerEndAt != null) {

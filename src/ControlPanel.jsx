@@ -1,10 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useGame } from './hooks/useGame'
-import { FORTY_MIN_SEC, createInitialGame } from './gameDefaults'
+import { createInitialGame } from './gameDefaults'
 import { correctSubmissionPoints, teamTotalScore } from './utils/scoring'
 import { wrongMarkCount } from './utils/submissionsDisplay'
-import { formatCountdown, getTimerSecondsRemaining } from './utils/timer'
+import {
+  configuredTimerDurationSec,
+  formatCountdown,
+  getTimerSecondsRemaining,
+} from './utils/timer'
+import { SCALE_UNITS, formatQuestionAnswerDisplay } from './utils/units'
 import SubmissionForm from './SubmissionForm'
 
 export default function ControlPanel() {
@@ -14,6 +19,8 @@ export default function ControlPanel() {
   const [teamName, setTeamName] = useState('')
   const [qText, setQText] = useState('')
   const [qAnswer, setQAnswer] = useState('')
+  const [qAnswerUnit, setQAnswerUnit] = useState('1')
+  const timerMinutesRef = useRef(null)
 
   useEffect(() => {
     const id = setInterval(() => tick((n) => n + 1), 1000)
@@ -50,11 +57,17 @@ export default function ControlPanel() {
       ...g,
       questions: [
         ...g.questions,
-        { id, text: qText.trim() || undefined, answer: ans },
+        {
+          id,
+          text: qText.trim() || undefined,
+          answer: ans,
+          answerUnit: qAnswerUnit || '1',
+        },
       ],
     }))
     setQText('')
     setQAnswer('')
+    setQAnswerUnit('1')
   }
 
   const removeQuestion = (id) => {
@@ -82,13 +95,22 @@ export default function ControlPanel() {
     }))
   }
 
+  const updateQuestionAnswerUnit = (id, answerUnit) => {
+    setGame((g) => ({
+      ...g,
+      questions: g.questions.map((q) =>
+        q.id === id ? { ...q, answerUnit: answerUnit || '1' } : q,
+      ),
+    }))
+  }
+
   const resetGame = () => {
     if (!window.confirm('Reset game? Clears submissions and restores 18 submissions per team.')) return
     setGame((g) => ({
       ...g,
       submissions: {},
       teams: g.teams.map((t) => ({ ...t, remainingSubmissions: 18 })),
-      timerPausedSec: FORTY_MIN_SEC,
+      timerPausedSec: configuredTimerDurationSec(g),
       timerEndAt: null,
     }))
   }
@@ -117,9 +139,19 @@ export default function ControlPanel() {
   const timerReset = () => {
     setGame((g) => ({
       ...g,
-      timerPausedSec: FORTY_MIN_SEC,
+      timerPausedSec: configuredTimerDurationSec(g),
       timerEndAt: null,
     }))
+  }
+
+  const applyTimerLength = () => {
+    const m = Number(timerMinutesRef.current?.value)
+    if (!Number.isFinite(m) || m < 1) {
+      window.alert('Enter a round length of at least 1 minute.')
+      return
+    }
+    const sec = Math.min(Math.round(m * 60), 7 * 24 * 3600)
+    setGame((g) => ({ ...g, timerDurationSec: sec }))
   }
 
   const exportJson = () => {
@@ -150,6 +182,10 @@ export default function ControlPanel() {
                 : {},
             locked: Boolean(data.locked),
             revealAnswers: Boolean(data.revealAnswers),
+            timerDurationSec:
+              typeof data.timerDurationSec === 'number' && data.timerDurationSec >= 60
+                ? data.timerDurationSec
+                : base.timerDurationSec,
             timerPausedSec:
               typeof data.timerPausedSec === 'number'
                 ? data.timerPausedSec
@@ -183,8 +219,31 @@ export default function ControlPanel() {
       </header>
 
       <section className="panel">
-        <h2>Timer (40 min)</h2>
+        <h2>Timer</h2>
         <p className="timer-readout">{formatCountdown(timerSec)}</p>
+        <div className="timer-duration-block">
+          <label className="timer-duration-label">
+            Round length (minutes)
+            <div className="inline-row timer-duration-inputs">
+              <input
+                ref={timerMinutesRef}
+                key={String(game.timerDurationSec ?? 'x')}
+                type="number"
+                min={1}
+                max={10080}
+                step={1}
+                defaultValue={Math.round(configuredTimerDurationSec(game) / 60)}
+              />
+              <button type="button" onClick={applyTimerLength}>
+                Set length
+              </button>
+            </div>
+          </label>
+          <p className="timer-duration-hint">
+            &quot;Reset&quot; and full game reset restore the countdown to this length. A running
+            timer keeps going until you pause or reset.
+          </p>
+        </div>
         <div className="btn-row">
           <button type="button" onClick={timerStart} disabled={running || timerSec <= 0}>
             Start
@@ -239,6 +298,18 @@ export default function ControlPanel() {
             value={qAnswer}
             onChange={(e) => setQAnswer(e.target.value)}
           />
+          <select
+            className="select-unit"
+            value={qAnswerUnit}
+            onChange={(e) => setQAnswerUnit(e.target.value)}
+            aria-label="Answer units"
+          >
+            {SCALE_UNITS.map((u) => (
+              <option key={u.id} value={u.id}>
+                {u.label}
+              </option>
+            ))}
+          </select>
           <button type="button" onClick={addQuestion}>
             Add question
           </button>
@@ -246,7 +317,7 @@ export default function ControlPanel() {
         <ul className="list-compact">
           {game.questions.map((q, i) => (
             <li key={q.id}>
-              <span>
+              <span className="question-edit">
                 Q{i + 1}
                 {q.text ? `: ${q.text}` : ''} — answer{' '}
                 <input
@@ -256,6 +327,21 @@ export default function ControlPanel() {
                   value={q.answer}
                   onChange={(e) => updateQuestionAnswer(q.id, e.target.value)}
                 />
+                <select
+                  className="select-unit input-inline-unit"
+                  value={q.answerUnit || '1'}
+                  onChange={(e) => updateQuestionAnswerUnit(q.id, e.target.value)}
+                  aria-label={`Q${i + 1} answer units`}
+                >
+                  {SCALE_UNITS.map((u) => (
+                    <option key={u.id} value={u.id}>
+                      {u.label}
+                    </option>
+                  ))}
+                </select>
+                <span className="question-answer-preview">
+                  ({formatQuestionAnswerDisplay(q)})
+                </span>
               </span>
               <button type="button" className="btn-danger" onClick={() => removeQuestion(q.id)}>
                 Remove

@@ -367,6 +367,34 @@
   font-variant-numeric: tabular-nums;
 }
 
+.timer-duration-block {
+  margin-bottom: 1rem;
+}
+
+.timer-duration-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.timer-duration-inputs {
+  margin-top: 0.35rem;
+  align-items: center;
+}
+
+.timer-duration-inputs input {
+  max-width: 6rem;
+}
+
+.timer-duration-hint {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  color: #6b7280;
+  line-height: 1.35;
+  max-width: 36rem;
+}
+
 .btn-row {
   display: flex;
   flex-wrap: wrap;
@@ -450,6 +478,20 @@ select {
   font-size: 0.9rem;
 }
 
+.submission-hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+.submission-hint code {
+  font-size: 0.9em;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: #f3f4f6;
+}
+
 .submission-interval {
   display: flex;
   gap: 1rem;
@@ -459,6 +501,73 @@ select {
 .submission-interval label {
   flex: 1;
   min-width: 6rem;
+}
+
+.submission-interval-scaled {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.85rem;
+}
+
+.submission-value-unit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.65rem 1rem;
+}
+
+.submission-value-unit > label:first-child {
+  flex: 1 1 8rem;
+  min-width: 6rem;
+}
+
+.submission-unit-label {
+  flex: 0 1 auto;
+  min-width: 7rem;
+}
+
+.submission-b-row {
+  align-items: center;
+}
+
+.submission-offset {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: 0.25rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+}
+
+.submission-offset input {
+  width: 1.1rem;
+  height: 1.1rem;
+  cursor: pointer;
+}
+
+.select-unit {
+  min-width: 7.5rem;
+}
+
+.input-inline-unit {
+  min-width: 6.5rem;
+  margin-left: 0.35rem;
+}
+
+.question-edit {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.5rem;
+}
+
+.question-answer-preview {
+  font-size: 0.88em;
+  color: #6b7280;
+  white-space: nowrap;
 }
 
 .form-msg {
@@ -533,6 +642,27 @@ select {
   }
 
   .form-msg {
+    color: #9ca3af;
+  }
+
+  .timer-duration-label {
+    color: #d1d5db;
+  }
+
+  .timer-duration-hint {
+    color: #9ca3af;
+  }
+
+  .submission-hint {
+    color: #9ca3af;
+  }
+
+  .submission-hint code {
+    background: #1f2937;
+    color: #e5e7eb;
+  }
+
+  .question-answer-preview {
     color: #9ca3af;
   }
 

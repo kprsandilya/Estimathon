@@ -3,6 +3,7 @@ import { useGame } from './hooks/useGame'
 import { correctSubmissionPoints, teamTotalScore } from './utils/scoring'
 import { wrongMarkCount } from './utils/submissionsDisplay'
 import { formatCountdown, getTimerSecondsRemaining } from './utils/timer'
+import { formatQuestionAnswerDisplay } from './utils/units'
 
 export default function Scoreboard() {
   const { game } = useGame()
@@ -58,7 +59,9 @@ export default function Scoreboard() {
                   <th key={q.id} scope="col" className="scoreboard-qhead">
                     <span className="scoreboard-q-label">Q{i + 1}</span>
                     {revealAnswers && (
-                      <span className="scoreboard-ans">{q.answer}</span>
+                      <span className="scoreboard-ans">
+                        {formatQuestionAnswerDisplay(q)}
+                      </span>
                     )}
                   </th>
                 ))}
