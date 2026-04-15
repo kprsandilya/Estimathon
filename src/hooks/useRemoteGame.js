@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { createInitialGame } from '../gameDefaults'
 
-const POLL_MS = 2000
+function pollMs() {
+  const n = Number(import.meta.env.VITE_REMOTE_POLL_MS)
+  return Number.isFinite(n) && n >= 1500 ? n : 2500
+}
 
 export function useRemoteGame() {
   const [game, setLocalGame] = useState(createInitialGame)
@@ -25,7 +28,7 @@ export function useRemoteGame() {
 
   useEffect(() => {
     pull()
-    const id = setInterval(pull, POLL_MS)
+    const id = setInterval(pull, pollMs())
     return () => clearInterval(id)
   }, [pull])
 

@@ -7,11 +7,11 @@ pnpm dev
 
 - **Scoreboard:** `/display` (default `/` redirects here)
 - **Player:** `/join` — create a team, choose your team, and submit interval answers (same rules as the host submission form). Team choice is saved in the browser.
-- **Control (admin):** `/control` — local dev has no password; hosted mode uses `ADMIN_PASSWORD`
+- **Control (admin):** `/control` — with live mode off, no password; with live mode on, `ADMIN_PASSWORD` + `SESSION_SECRET` for `/api/admin/*`.
 
 ### Local vs hosted game state
 
-- **Default (`VITE_USE_REMOTE_GAME` unset or `false`):** game data lives in **localStorage** (same machine/browser).
-- **Hosted on Vercel (`VITE_USE_REMOTE_GAME=true`):** the API keeps one game in **server memory only** (no Vercel databases/KV). Everyone polls `GET /api/game`. State is **not durable**: it resets when the function cold-starts, on redeploy, or if traffic hits another instance. Set `ADMIN_PASSWORD` and `SESSION_SECRET` in Vercel. Use `vercel dev` to test API + UI locally.
+- **Default (`VITE_USE_REMOTE_GAME` unset or false):** game data in **localStorage** only — each browser has its own copy.
+- **Live / hosted (`VITE_USE_REMOTE_GAME` true, 1, yes, or on at build time):** one game in **server function memory** (no Redis/DB). Clients poll `GET /api/game`. State resets on cold start or redeploy. On serverless, **multiple warm instances** can each hold different memory briefly; low traffic usually behaves like one copy.
 
-See `.env.example` for variable names.
+Set `ADMIN_PASSWORD` and `SESSION_SECRET` on Vercel for admin login. See `.env.example`.

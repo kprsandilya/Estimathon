@@ -6,7 +6,7 @@ import ParticipantAnswerForm from './ParticipantAnswerForm'
 import { SESSION_JOIN_KEY, getSavedTeamId, setSavedTeamId } from './participantTeam'
 
 export default function JoinTeam() {
-  const { game, gameLoading } = useGame()
+  const { game, gameLoading, isRemote } = useGame()
   const { teams } = game
   const { createTeam, joinTeam, leaveTeam } = useParticipantActions()
 
@@ -19,7 +19,14 @@ export default function JoinTeam() {
   const [busy, setBusy] = useState(false)
 
   const onTeam = teams.find((t) => t.id === membershipId)
-  const hasMembership = Boolean(membershipId && onTeam)
+  /** Server list can be briefly empty while polling; avoid hiding “your team” during that window. */
+  const remoteRecovering =
+    isRemote &&
+    Boolean(membershipId) &&
+    !onTeam &&
+    !gameLoading &&
+    teams.length === 0
+  const hasMembership = Boolean((membershipId && onTeam) || remoteRecovering)
 
   useEffect(() => {
     const saved = getSavedTeamId()
@@ -129,13 +136,28 @@ export default function JoinTeam() {
   }
 
   return (
-    <div className="control join-team">
+    <div className="control join-team" data-game-mode={isRemote ? 'remote' : 'local'}>
+      {isRemote ? (
+        <div className="join-mode-banner join-mode-banner--remote" role="status">
+          <strong>Live game</strong> — teams and scores come from the server (in-memory API, not
+          your browser). Everyone sees the same leaderboard after each refresh.
+        </div>
+      ) : (
+        <div className="join-mode-banner join-mode-banner--local" role="status">
+          <strong>This browser only</strong> — set <code>VITE_USE_REMOTE_GAME=true</code> at build
+          time and redeploy so all devices share one game on the server.
+        </div>
+      )}
       <h1>Player</h1>
       <p className="join-team-lead">
-        Join one team at a time. Your team is saved in this browser. Submissions left are shared by
-        everyone on your team.
+        Join one team at a time. Your team id is saved in this browser; the live roster and scores
+        come from the server when live mode is on. Submissions left are shared by everyone on your
+        team.
       </p>
       {gameLoading && <p className="form-msg">Loading…</p>}
+      {remoteRecovering && (
+        <p className="form-msg">Syncing team list from the server…</p>
+      )}
 
       {!hasMembership && (
         <section className="panel join-section">
@@ -165,13 +187,15 @@ export default function JoinTeam() {
           <h2>Your team</h2>
           <div className="join-team-highlight">
             <p className="join-team-you-are">
-              You are on <strong>{onTeam.name}</strong>
+              You are on{' '}
+              <strong>{onTeam?.name ?? '…'}</strong>
             </p>
             <p className="join-team-stats">
               <span className="join-team-stat">
-                Submissions remaining: <strong>{onTeam.remainingSubmissions}</strong>
+                Submissions remaining:{' '}
+                <strong>{onTeam?.remainingSubmissions ?? '—'}</strong>
               </span>
-              {(onTeam.memberCount ?? 0) > 0 && (
+              {onTeam != null && (onTeam.memberCount ?? 0) > 0 && (
                 <span className="join-team-stat">
                   Members registered: <strong>{onTeam.memberCount}</strong>
                 </span>

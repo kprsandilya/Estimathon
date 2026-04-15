@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { isRemoteGameMode } from './utils/remoteGameFlag'
 
 function AdminGateRemote({ children }) {
   const [status, setStatus] = useState('checking')
@@ -96,9 +97,8 @@ function AdminGateRemote({ children }) {
   )
 }
 
-/** Password gate only when `VITE_USE_REMOTE_GAME` is enabled (hosted / Vercel). */
+/** Password gate when live server game mode is on (same flag as `/api/game` + polling). */
 export default function AdminGate({ children }) {
-  const remote = import.meta.env.VITE_USE_REMOTE_GAME === 'true'
-  if (!remote) return children
+  if (!isRemoteGameMode()) return children
   return <AdminGateRemote>{children}</AdminGateRemote>
 }

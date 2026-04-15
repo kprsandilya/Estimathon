@@ -3,6 +3,7 @@ import { GameContext } from './gameContext'
 import { createInitialGame, STORAGE_KEY } from './gameDefaults'
 import { useRemoteGame } from './hooks/useRemoteGame'
 import { useSyncedState } from './hooks/useSyncedState'
+import { isRemoteGameMode } from './utils/remoteGameFlag'
 
 function GameProviderLocal({ children }) {
   const [game, setGame] = useSyncedState(STORAGE_KEY, createInitialGame)
@@ -37,7 +38,7 @@ function GameProviderRemote({ children }) {
 }
 
 export function GameProvider({ children }) {
-  const remote = import.meta.env.VITE_USE_REMOTE_GAME === 'true'
+  const remote = isRemoteGameMode()
   return remote ? (
     <GameProviderRemote>{children}</GameProviderRemote>
   ) : (
