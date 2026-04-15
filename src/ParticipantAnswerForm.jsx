@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { useGame } from './hooks/useGame'
-import { computeSubmissionUpdate } from './utils/submissionApply'
+import { useParticipantActions } from './hooks/useParticipantActions'
 import { SCALE_UNITS } from './utils/units'
 
-export default function SubmissionForm() {
-  const { game, setGame } = useGame()
-  const { teams, questions, locked } = game
-  const [teamId, setTeamId] = useState('')
+export default function ParticipantAnswerForm({ teamId }) {
+  const { game } = useGame()
+  const { submitAnswer } = useParticipantActions()
+  const { questions, locked } = game
+  const gameEnded = Boolean(game.gameEnded)
+
   const [questionId, setQuestionId] = useState('')
   const [aStr, setAStr] = useState('')
   const [bStr, setBStr] = useState('')
@@ -14,65 +16,54 @@ export default function SubmissionForm() {
   const [bUnit, setBUnit] = useState('1')
   const [bOffset, setBOffset] = useState(false)
   const [msg, setMsg] = useState('')
+  const [pending, setPending] = useState(false)
 
-  const submit = (e) => {
+  const disabled = !teamId || locked || gameEnded
+
+  const submit = async (e) => {
     e.preventDefault()
     setMsg('')
-    if (locked) {
-      setMsg('Submissions are locked.')
+    if (!teamId) {
+      setMsg('Select or create a team first.')
       return
     }
-    if (!teamId || !questionId) {
-      setMsg('Pick a team and a question.')
-      return
-    }
-    const aBox = Number(aStr)
-    const bBox = Number(bStr)
-    const result = computeSubmissionUpdate(game, {
+    setPending(true)
+    const result = await submitAnswer({
       teamId,
       questionId,
-      aBox,
-      bBox,
+      aBox: Number(aStr),
+      bBox: Number(bStr),
       aUnit,
       bUnit,
       bOffset,
     })
+    setPending(false)
     if (result.error) {
       setMsg(result.error)
       return
     }
-    setGame(result.game)
-    setMsg('Saved.')
+    setMsg('Submitted.')
   }
 
   return (
-    <form className="panel submission-form" onSubmit={submit}>
-      <h2>Submission</h2>
+    <form className="panel submission-form participant-answer-form" onSubmit={submit}>
+      <h2>Your answer</h2>
       <p className="submission-hint">
-        Enter interval values, then choose scale. Offset on <strong>b</strong> uses{' '}
-        <code>(b − 1) × scale</code> as the upper bound for checking and scoring.
+        Interval <strong>a</strong> (lower) and <strong>b</strong> (upper), with units. Offset on{' '}
+        <strong>b</strong> uses <code>(b − 1) × scale</code> as the upper bound.
       </p>
-      <label>
-        Team
-        <select
-          value={teamId}
-          onChange={(e) => setTeamId(e.target.value)}
-          disabled={locked}
-        >
-          <option value="">—</option>
-          {teams.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.name} ({t.remainingSubmissions} left)
-            </option>
-          ))}
-        </select>
-      </label>
+      {gameEnded && (
+        <p className="form-msg participant-warning">The game has ended — no more submissions.</p>
+      )}
+      {locked && !gameEnded && (
+        <p className="form-msg participant-warning">Submissions are locked by the host.</p>
+      )}
       <label>
         Question
         <select
           value={questionId}
           onChange={(e) => setQuestionId(e.target.value)}
-          disabled={locked}
+          disabled={disabled}
         >
           <option value="">—</option>
           {questions.map((q, i) => (
@@ -93,7 +84,7 @@ export default function SubmissionForm() {
               step="any"
               value={aStr}
               onChange={(e) => setAStr(e.target.value)}
-              disabled={locked}
+              disabled={disabled}
             />
           </label>
           <label className="submission-unit-label">
@@ -102,7 +93,7 @@ export default function SubmissionForm() {
               className="select-unit"
               value={aUnit}
               onChange={(e) => setAUnit(e.target.value)}
-              disabled={locked}
+              disabled={disabled}
               aria-label="Units for a"
             >
               {SCALE_UNITS.map((u) => (
@@ -121,7 +112,7 @@ export default function SubmissionForm() {
               step="any"
               value={bStr}
               onChange={(e) => setBStr(e.target.value)}
-              disabled={locked}
+              disabled={disabled}
             />
           </label>
           <label className="submission-unit-label">
@@ -130,7 +121,7 @@ export default function SubmissionForm() {
               className="select-unit"
               value={bUnit}
               onChange={(e) => setBUnit(e.target.value)}
-              disabled={locked}
+              disabled={disabled}
               aria-label="Units for b"
             >
               {SCALE_UNITS.map((u) => (
@@ -145,14 +136,14 @@ export default function SubmissionForm() {
               type="checkbox"
               checked={bOffset}
               onChange={(e) => setBOffset(e.target.checked)}
-              disabled={locked}
+              disabled={disabled}
             />
             <span>Offset</span>
           </label>
         </div>
       </div>
-      <button type="submit" disabled={locked}>
-        Submit
+      <button type="submit" disabled={disabled || pending}>
+        {pending ? 'Submitting…' : 'Submit'}
       </button>
       {msg && <p className="form-msg">{msg}</p>}
     </form>

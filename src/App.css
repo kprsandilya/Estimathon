@@ -763,6 +763,26 @@ select {
   font-size: 0.9rem;
 }
 
+.join-section h2 {
+  margin: 0 0 0.65rem;
+  font-size: 1.05rem;
+}
+
+.participant-answer-form {
+  margin-top: 0.5rem;
+}
+
+.participant-warning {
+  color: #b45309;
+  font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+  .participant-warning {
+    color: #fcd34d;
+  }
+}
+
 /* End-game podium (display) */
 .scoreboard-ended {
   justify-content: center;

@@ -6,7 +6,7 @@ pnpm dev
 ```
 
 - **Scoreboard:** `/display` (default `/` redirects here)
-- **Join a team:** `/join` — picks a team; saved in the browser across refreshes
+- **Player:** `/join` — create a team, choose your team, and submit interval answers (same rules as the host submission form). Team choice is saved in the browser.
 - **Control (admin):** `/control` — local dev has no password; hosted mode uses `ADMIN_PASSWORD`
 
 ### Local vs hosted game state
