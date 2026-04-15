@@ -1,0 +1,88 @@
+{
+  "teams": [],
+  "questions": [
+    {
+      "id": "a064002d-64a3-47ac-a353-6bf39d0cb5ca",
+      "text": "Q1",
+      "answer": 538.518,
+      "answerUnit": "1"
+    },
+    {
+      "id": "a34c296c-2d79-4520-8fb7-6c1d602dd01c",
+      "text": "Q2",
+      "answer": 6508,
+      "answerUnit": "1"
+    },
+    {
+      "id": "8631d2cf-d08b-469d-842d-cac732d85ef3",
+      "text": "Q3",
+      "answer": 10958.93,
+      "answerUnit": "1"
+    },
+    {
+      "id": "4a555e92-e63c-4c77-b782-87537c6ba260",
+      "text": "Q4",
+      "answer": 61823.07,
+      "answerUnit": "1"
+    },
+    {
+      "id": "e6af1b37-40ab-428b-923d-e4e9df0758be",
+      "text": "Q5",
+      "answer": 86953,
+      "answerUnit": "1"
+    },
+    {
+      "id": "bd10777c-0759-4d5c-b67c-7dc7e15a4e65",
+      "text": "Q6",
+      "answer": 10081,
+      "answerUnit": "1"
+    },
+    {
+      "id": "7bd5e962-233c-4d6b-88cc-5d710a5c2b10",
+      "text": "Q7",
+      "answer": 489998,
+      "answerUnit": "1"
+    },
+    {
+      "id": "77708bdc-8544-49f1-8aa3-b7513db3bbda",
+      "text": "Q8",
+      "answer": 401,
+      "answerUnit": "1"
+    },
+    {
+      "id": "be08265f-1417-4191-b733-b600881ccf8d",
+      "text": "Q9",
+      "answer": 2857,
+      "answerUnit": "1"
+    },
+    {
+      "id": "d6675451-9f9e-4a93-b9b2-49d449fed4b2",
+      "text": "Q10",
+      "answer": 700237,
+      "answerUnit": "1"
+    },
+    {
+      "id": "7ad16d25-932c-40f0-b68b-d589d42a227d",
+      "text": "Q11",
+      "answer": 2103317.11,
+      "answerUnit": "1"
+    },
+    {
+      "id": "423348bc-e9c8-4cca-bd64-4c02e2674beb",
+      "text": "Q12",
+      "answer": 99934,
+      "answerUnit": "1"
+    },
+    {
+      "id": "1edc7f72-8640-45e6-83e5-0b6e8135461f",
+      "text": "Q13",
+      "answer": 36391,
+      "answerUnit": "1"
+    }
+  ],
+  "submissions": {},
+  "locked": false,
+  "revealAnswers": false,
+  "timerPausedSec": 2400,
+  "timerEndAt": null
+}

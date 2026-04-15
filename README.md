@@ -1,6 +1,17 @@
-cd c:\Users\kprsa\Documents\CodingProjects\Estimathon
+## Estimathon
+
+```bash
 pnpm install
 pnpm dev
+```
 
-Control: http://localhost:5173/control (also / redirects there).
-Display: http://localhost:5173/display — use Open display (new tab) so the projector tab updates via storage events.
+- **Scoreboard:** `/display` (default `/` redirects here)
+- **Join a team:** `/join` — picks a team; saved in the browser across refreshes
+- **Control (admin):** `/control` — local dev has no password; hosted mode uses `ADMIN_PASSWORD`
+
+### Local vs hosted game state
+
+- **Default (`VITE_USE_REMOTE_GAME` unset or `false`):** game data lives in **localStorage** (same machine/browser).
+- **Hosted on Vercel (`VITE_USE_REMOTE_GAME=true`):** the API keeps one game in **server memory only** (no Vercel databases/KV). Everyone polls `GET /api/game`. State is **not durable**: it resets when the function cold-starts, on redeploy, or if traffic hits another instance. Set `ADMIN_PASSWORD` and `SESSION_SECRET` in Vercel. Use `vercel dev` to test API + UI locally.
+
+See `.env.example` for variable names.

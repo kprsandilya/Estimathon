@@ -35,3 +35,21 @@ export function teamTotalScore(teamId, questions, submissions) {
   }
   return Math.pow(2, incorrect) * (10 + sumCorrect)
 }
+
+/**
+ * Best-first: lower total is better. Tie-break by name.
+ * @param {{ id: string, name: string }[]} teams
+ * @param {{ id: string }[]} questions
+ */
+export function getRankedTeams(teams, questions, submissions) {
+  return [...teams]
+    .map((t) => ({
+      id: t.id,
+      name: t.name,
+      total: teamTotalScore(t.id, questions, submissions),
+    }))
+    .sort((a, b) => {
+      if (a.total !== b.total) return a.total - b.total
+      return a.name.localeCompare(b.name)
+    })
+}

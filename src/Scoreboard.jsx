@@ -4,6 +4,7 @@ import { correctSubmissionPoints, teamTotalScore } from './utils/scoring'
 import { wrongMarkCount } from './utils/submissionsDisplay'
 import { formatCountdown, getTimerSecondsRemaining } from './utils/timer'
 import { formatQuestionAnswerDisplay } from './utils/units'
+import EndGamePodium from './EndGamePodium'
 
 export default function Scoreboard() {
   const { game } = useGame()
@@ -16,6 +17,7 @@ export default function Scoreboard() {
 
   const remaining = getTimerSecondsRemaining(game)
   const { teams, questions, submissions, revealAnswers } = game
+  const gameEnded = Boolean(game.gameEnded)
 
   const podiumClassByTeamId = useMemo(() => {
     const map = new Map()
@@ -38,6 +40,17 @@ export default function Scoreboard() {
     ranked.slice(0, 3).forEach((r, i) => map.set(r.id, medals[i]))
     return map
   }, [teams, questions, submissions])
+
+  if (gameEnded) {
+    return (
+      <div className="scoreboard scoreboard-ended">
+        <header className="scoreboard-header">
+          <h1>Estimathon</h1>
+        </header>
+        <EndGamePodium teams={teams} questions={questions} submissions={submissions} />
+      </div>
+    )
+  }
 
   return (
     <div className="scoreboard">

@@ -112,7 +112,21 @@ export default function ControlPanel() {
       teams: g.teams.map((t) => ({ ...t, remainingSubmissions: 18 })),
       timerPausedSec: configuredTimerDurationSec(g),
       timerEndAt: null,
+      gameEnded: false,
     }))
+  }
+
+  const endGame = () => {
+    if (!window.confirm('End the game for everyone? The scoreboard will show the final podium.')) return
+    setGame((g) => ({
+      ...g,
+      gameEnded: true,
+      timerEndAt: null,
+    }))
+  }
+
+  const resumeGame = () => {
+    setGame((g) => ({ ...g, gameEnded: false }))
   }
 
   const toggleLock = () => setGame((g) => ({ ...g, locked: !g.locked }))
@@ -182,6 +196,7 @@ export default function ControlPanel() {
                 : {},
             locked: Boolean(data.locked),
             revealAnswers: Boolean(data.revealAnswers),
+            gameEnded: Boolean(data.gameEnded),
             timerDurationSec:
               typeof data.timerDurationSec === 'number' && data.timerDurationSec >= 60
                 ? data.timerDurationSec
@@ -212,6 +227,7 @@ export default function ControlPanel() {
       <header className="control-header">
         <h1>Estimathon — Control</h1>
         <nav className="control-nav">
+          <Link to="/join">Join a team</Link>
           <Link to="/display" target="_blank" rel="noreferrer">
             Open display
           </Link>
@@ -365,6 +381,15 @@ export default function ControlPanel() {
           <button type="button" onClick={toggleReveal}>
             {game.revealAnswers ? 'Hide answers on display' : 'Reveal answers on display'}
           </button>
+          {game.gameEnded ? (
+            <button type="button" onClick={resumeGame}>
+              Resume game (show leaderboard)
+            </button>
+          ) : (
+            <button type="button" className="btn-danger" onClick={endGame}>
+              End game (show podium)
+            </button>
+          )}
           <button type="button" onClick={exportJson}>
             Export JSON
           </button>

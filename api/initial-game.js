@@ -1,6 +1,5 @@
-export const STORAGE_KEY = 'estimathon-game-v1'
-
-export const FORTY_MIN_SEC = 40 * 60
+/** Mirrors `src/gameDefaults.js` for serverless (no cross-import). */
+const FORTY_MIN_SEC = 40 * 60
 
 export function createInitialGame() {
   return {

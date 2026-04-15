@@ -675,3 +675,203 @@ select {
     background: #111827;
   }
 }
+
+/* Admin gate (remote only) */
+.admin-gate {
+  max-width: 24rem;
+  margin: 3rem auto;
+  padding: 1.5rem;
+  text-align: left;
+}
+
+.admin-gate h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.35rem;
+}
+
+.admin-gate-lead {
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+  color: #6b7280;
+}
+
+.admin-login-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.admin-gate-error {
+  color: #b91c1c;
+}
+
+.admin-gate-links {
+  margin: 1.25rem 0 0;
+  font-size: 0.9rem;
+}
+
+.admin-shell .control {
+  padding-top: 0;
+}
+
+.admin-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  max-width: 52rem;
+  margin: 0 auto 0.75rem;
+  padding: 0.5rem 1rem;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.admin-bar-out {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+/* Join team */
+.join-team h1 {
+  margin: 0 0 0.5rem;
+}
+
+.join-team-lead {
+  margin: 0 0 1rem;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.join-team-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+  max-width: 22rem;
+}
+
+.join-team-status {
+  margin: 1rem 0 0;
+  font-size: 0.95rem;
+}
+
+.join-team-links {
+  margin: 1.5rem 0 0;
+  font-size: 0.9rem;
+}
+
+/* End-game podium (display) */
+.scoreboard-ended {
+  justify-content: center;
+}
+
+.podium-final {
+  text-align: center;
+  padding: 1rem 1rem 3rem;
+  max-width: 56rem;
+  margin: 0 auto;
+}
+
+.podium-final-title {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  color: #fff;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5);
+}
+
+.podium-final-sub {
+  margin: 0.5rem 0 2rem;
+  color: #d1d5db;
+  font-size: 1.05rem;
+}
+
+.podium-final-stand {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 1rem 1.5rem;
+}
+
+.podium-final-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 10rem;
+}
+
+.podium-final-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  margin-bottom: 0.5rem;
+  min-height: 8rem;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.podium-final-second .podium-final-block {
+  background: linear-gradient(180deg, rgba(148, 163, 184, 0.35), rgba(71, 85, 105, 0.5));
+}
+
+.podium-final-first .podium-final-block {
+  background: linear-gradient(180deg, rgba(234, 179, 8, 0.4), rgba(180, 83, 9, 0.45));
+  min-height: 10rem;
+}
+
+.podium-final-third .podium-final-block {
+  background: linear-gradient(180deg, rgba(180, 83, 9, 0.4), rgba(120, 53, 15, 0.5));
+}
+
+.podium-final-rank {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #e5e7eb;
+}
+
+.podium-final-name {
+  font-size: clamp(1.25rem, 3vw, 1.85rem);
+  font-weight: 700;
+  color: #fff;
+}
+
+.podium-final-score {
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  color: #fef3c7;
+}
+
+.podium-final-empty {
+  color: #9ca3af;
+  font-size: 1.5rem;
+}
+
+.podium-riser {
+  width: 100%;
+  border-radius: 6px 6px 0 0;
+}
+
+.podium-riser--silver {
+  height: 3.5rem;
+  background: linear-gradient(90deg, #64748b, #94a3b8);
+}
+
+.podium-riser--gold {
+  height: 5.5rem;
+  background: linear-gradient(90deg, #ca8a04, #eab308, #ca8a04);
+}
+
+.podium-riser--bronze {
+  height: 2.5rem;
+  background: linear-gradient(90deg, #9a3412, #d97706);
+}
