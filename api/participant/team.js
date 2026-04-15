@@ -28,7 +28,10 @@ export default async function handler(req, res) {
   const id = crypto.randomUUID()
   const next = {
     ...game,
-    teams: [...game.teams, { id, name, remainingSubmissions: 18 }],
+    teams: [
+      ...game.teams,
+      { id, name, remainingSubmissions: 18, memberCount: 1 },
+    ],
   }
   writeGame(next)
   return res.status(200).json({ ok: true, teamId: id })

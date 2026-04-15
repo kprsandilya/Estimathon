@@ -745,6 +745,56 @@ select {
   font-size: 0.95rem;
 }
 
+.join-team-hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.88rem;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+.join-leave-hint {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.join-your-team-card .join-team-highlight {
+  padding: 0.25rem 0;
+}
+
+.join-team-you-are {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+}
+
+.join-team-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+}
+
+.join-team-stat strong {
+  font-variant-numeric: tabular-nums;
+}
+
+.join-leave-btn {
+  margin-top: 0.25rem;
+}
+
+.join-switch-section {
+  margin-top: 0.5rem;
+}
+
+.participant-team-pill {
+  margin: 0 0 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  font-size: 0.95rem;
+}
+
 .join-team-form label {
   display: flex;
   flex-direction: column;
@@ -780,6 +830,16 @@ select {
 @media (prefers-color-scheme: dark) {
   .participant-warning {
     color: #fcd34d;
+  }
+
+  .participant-team-pill {
+    background: #1e3a5f;
+    border-color: #3b82f6;
+    color: #e5e7eb;
+  }
+
+  .join-team-hint {
+    color: #9ca3af;
   }
 }
 

@@ -33,7 +33,10 @@ export default function ControlPanel() {
     const id = crypto.randomUUID()
     setGame((g) => ({
       ...g,
-      teams: [...g.teams, { id, name, remainingSubmissions: 18 }],
+      teams: [
+        ...g.teams,
+        { id, name, remainingSubmissions: 18, memberCount: 0 },
+      ],
     }))
     setTeamName('')
   }

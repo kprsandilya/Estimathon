@@ -1,5 +1,8 @@
 export const PARTICIPANT_TEAM_KEY = 'estimathon-participant-team-id'
 
+/** Dedupes client-side "join" sync with server per tab session. */
+export const SESSION_JOIN_KEY = 'estimathon-session-joined-team'
+
 export function getSavedTeamId() {
   try {
     return localStorage.getItem(PARTICIPANT_TEAM_KEY)

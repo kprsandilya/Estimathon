@@ -3,11 +3,12 @@ import { useGame } from './hooks/useGame'
 import { useParticipantActions } from './hooks/useParticipantActions'
 import { SCALE_UNITS } from './utils/units'
 
-export default function ParticipantAnswerForm({ teamId }) {
+export default function ParticipantAnswerForm({ teamId, team: teamProp }) {
   const { game } = useGame()
   const { submitAnswer } = useParticipantActions()
-  const { questions, locked } = game
+  const { questions, locked, teams } = game
   const gameEnded = Boolean(game.gameEnded)
+  const team = teamProp ?? teams.find((t) => t.id === teamId)
 
   const [questionId, setQuestionId] = useState('')
   const [aStr, setAStr] = useState('')
@@ -48,6 +49,12 @@ export default function ParticipantAnswerForm({ teamId }) {
   return (
     <form className="panel submission-form participant-answer-form" onSubmit={submit}>
       <h2>Your answer</h2>
+      {team && teamId && (
+        <p className="participant-team-pill" aria-live="polite">
+          Team <strong>{team.name}</strong> — <strong>{team.remainingSubmissions}</strong> submissions
+          remaining
+        </p>
+      )}
       <p className="submission-hint">
         Interval <strong>a</strong> (lower) and <strong>b</strong> (upper), with units. Offset on{' '}
         <strong>b</strong> uses <code>(b − 1) × scale</code> as the upper bound.
