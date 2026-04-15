@@ -4,9 +4,11 @@ import { useGame } from './hooks/useGame'
 import { useParticipantActions } from './hooks/useParticipantActions'
 import ParticipantAnswerForm from './ParticipantAnswerForm'
 import { SESSION_JOIN_KEY, getSavedTeamId, setSavedTeamId } from './participantTeam'
+import { isLocalManualGameMode } from './utils/localGameMode'
 
 export default function JoinTeam() {
-  const { game, gameLoading, isRemote } = useGame()
+  const { game, gameLoading, isRemote, gameStoreBackend } = useGame()
+  const localManual = isLocalManualGameMode()
   const { teams } = game
   const { createTeam, joinTeam, leaveTeam } = useParticipantActions()
 
@@ -137,15 +139,32 @@ export default function JoinTeam() {
 
   return (
     <div className="control join-team" data-game-mode={isRemote ? 'remote' : 'local'}>
-      {isRemote ? (
-        <div className="join-mode-banner join-mode-banner--remote" role="status">
-          <strong>Live game</strong> — teams and scores come from the server (in-memory API, not
-          your browser). Everyone sees the same leaderboard after each refresh.
+      {localManual ? (
+        <div className="join-mode-banner join-mode-banner--local" role="status">
+          <strong>Local manual mode</strong> — teams, questions, and scores stay in this browser’s
+          localStorage. Use <strong>/control</strong> here to add teams and questions; other devices
+          do not sync. Set <code>VITE_USE_REMOTE_GAME=true</code> at build time for a shared live
+          game (with Redis on the server).
         </div>
       ) : (
-        <div className="join-mode-banner join-mode-banner--local" role="status">
-          <strong>This browser only</strong> — set <code>VITE_USE_REMOTE_GAME=true</code> at build
-          time and redeploy so all devices share one game on the server.
+        <div className="join-mode-banner join-mode-banner--remote" role="status">
+          <strong>Live game</strong> — leaderboard and metrics update on each poll (tune{' '}
+          <code>VITE_REMOTE_POLL_MS</code> for snappier refresh).
+          {!gameLoading && gameStoreBackend === 'redis' && (
+            <>
+              {' '}
+              Game JSON is in <strong>Redis</strong> (shared across all devices and serverless
+              workers).
+            </>
+          )}
+          {!gameLoading && gameStoreBackend === 'memory' && (
+            <>
+              {' '}
+              API is using <strong>process memory</strong> only — set{' '}
+              <code>UPSTASH_REDIS_REST_URL</code> + <code>UPSTASH_REDIS_REST_TOKEN</code> (or Vercel
+              KV vars) on the server for durable, consistent live data.
+            </>
+          )}
         </div>
       )}
       <h1>Player</h1>

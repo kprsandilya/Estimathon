@@ -10,10 +10,17 @@ export function useRemoteGame() {
   const [game, setLocalGame] = useState(createInitialGame)
   const [gameLoading, setGameLoading] = useState(true)
   const [fetchError, setFetchError] = useState(null)
+  const [gameStoreBackend, setGameStoreBackend] = useState(
+    /** @type {null | 'redis' | 'memory'} */ (null),
+  )
 
   const pull = useCallback(async () => {
     try {
       const r = await fetch('/api/game', { credentials: 'omit' })
+      const h = r.headers.get('X-Game-Store')
+      if (h === 'redis' || h === 'memory') {
+        setGameStoreBackend(h)
+      }
       const data = await r.json()
       if (data.game && typeof data.game === 'object') {
         setLocalGame({ ...createInitialGame(), ...data.game })
@@ -61,8 +68,9 @@ export function useRemoteGame() {
       gameLoading,
       fetchError,
       isRemote: true,
+      gameStoreBackend,
       refresh: pull,
     }),
-    [game, setGame, gameLoading, fetchError, pull],
+    [game, setGame, gameLoading, fetchError, gameStoreBackend, pull],
   )
 }

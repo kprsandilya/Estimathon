@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Team name must be 1–120 characters.' })
   }
 
-  const game = readGame()
+  const game = await readGame()
   if (game.gameEnded) {
     return res.status(403).json({ error: 'The game has ended.' })
   }
@@ -33,6 +33,6 @@ export default async function handler(req, res) {
       { id, name, remainingSubmissions: 18, memberCount: 1 },
     ],
   }
-  writeGame(next)
+  await writeGame(next)
   return res.status(200).json({ ok: true, teamId: id })
 }

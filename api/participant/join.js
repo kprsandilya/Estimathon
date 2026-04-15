@@ -17,11 +17,11 @@ export default async function handler(req, res) {
   }
 
   const teamId = typeof body.teamId === 'string' ? body.teamId : ''
-  const game = readGame()
+  const game = await readGame()
   const result = applyTeamJoin(game, teamId)
   if (result.error) {
     return res.status(400).json({ error: result.error })
   }
-  writeGame(result.game)
+  await writeGame(result.game)
   return res.status(200).json({ ok: true })
 }

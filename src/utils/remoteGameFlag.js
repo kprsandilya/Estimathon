@@ -1,6 +1,8 @@
 /**
- * When true, the app loads game state from `/api/game` (server-held copy) instead of localStorage.
- * Set at build time via `VITE_USE_REMOTE_GAME`.
+ * Live / shared mode: game state comes from `GET /api/game` (poll). Use with server-side Redis
+ * (Upstash or Vercel KV) for a single source of truth across instances.
+ *
+ * When false, everything stays in localStorage (see `isLocalManualGameMode` in `localGameMode.js`).
  */
 export function isRemoteGameMode() {
   const v = import.meta.env.VITE_USE_REMOTE_GAME

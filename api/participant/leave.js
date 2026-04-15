@@ -17,8 +17,8 @@ export default async function handler(req, res) {
   }
 
   const teamId = typeof body.teamId === 'string' ? body.teamId : ''
-  const game = readGame()
+  const game = await readGame()
   const result = applyTeamLeave(game, teamId)
-  writeGame(result.game)
+  await writeGame(result.game)
   return res.status(200).json({ ok: true })
 }

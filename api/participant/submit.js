@@ -26,7 +26,7 @@ export default async function handler(req, res) {
     bOffset,
   } = body
 
-  const game = readGame()
+  const game = await readGame()
   const result = computeSubmissionUpdate(game, {
     teamId,
     questionId,
@@ -41,6 +41,6 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: result.error })
   }
 
-  writeGame(result.game)
+  await writeGame(result.game)
   return res.status(200).json({ ok: true })
 }

@@ -1,6 +1,6 @@
 import { createInitialGame } from './initial-game.js'
 import { getJsonBody } from './lib/body.js'
-import { readGame, writeGame } from './lib/game-store.js'
+import { getGameStoreBackend, readGame, writeGame } from './lib/game-store.js'
 import { isAdminRequest } from './lib/session.js'
 
 export default async function handler(req, res) {
@@ -8,7 +8,8 @@ export default async function handler(req, res) {
 
   if (req.method === 'GET') {
     try {
-      const game = readGame()
+      const game = await readGame()
+      res.setHeader('X-Game-Store', getGameStoreBackend())
       return res.status(200).json({ game })
     } catch (e) {
       console.error('readGame', e)
@@ -28,7 +29,7 @@ export default async function handler(req, res) {
       if (!body || typeof body.game !== 'object' || body.game === null) {
         return res.status(400).json({ error: 'Invalid body' })
       }
-      writeGame(body.game)
+      await writeGame(body.game)
       return res.status(200).json({ ok: true })
     } catch (e) {
       console.error('writeGame', e)
